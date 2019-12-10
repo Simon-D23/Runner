@@ -25,6 +25,7 @@ public class Player : MonoBehaviour {
     private float speed;
     private float MAX_SPEED;
     private string side = "right";
+    private bool win = false;
 
     private bool isGrounded = false;
     private bool canClimbLadder = false;
@@ -197,12 +198,6 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("k"))
         {
             player.GetComponent<Animator>().enabled = true;
-            if (collision.name.Equals("Crate"))
-            {
-                //GunFactory.CreateGameObject("rifle", collision.transform.position.x - 1, collision.transform.position.y - 0.2f);             
-               // collision.gameObject.SetActive(false);
-            }
-            
         }
     }
 
@@ -236,7 +231,6 @@ public class Player : MonoBehaviour {
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
-            player.SetActive(false);
         }
     }
 
@@ -281,6 +275,15 @@ public class Player : MonoBehaviour {
     public string GetSide()
     {
         return side;
+    }
+
+    public void SetWin(bool value)
+    {
+        win = value;
+    }
+    public bool GetWin()
+    {
+        return win;
     }
 
     public GameObject GetGameObject()

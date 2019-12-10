@@ -10,19 +10,19 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    private Player player;
+    private GameObject player;
     private Text nbPlank;
     private Text nbIron;
     private Text nbMunition;
     private Text nbCoin;
-    private Text gameOverText;
+    private Text text;
 
     private RectTransform healthBar;
     private RectTransform energyBar;
 
     private void Update()
     {
-        show(player.GetInventory());
+        show(player.GetComponent<Player>().GetInventory());
         show(player);
     }
 
@@ -34,13 +34,18 @@ public class HUD : MonoBehaviour
         nbCoin.GetComponent<Text>().text = inventory.GetNbCoin().ToString();
     }
 
-    public void show(Player player)
+    public void show(GameObject player)
     {
-        healthBar.sizeDelta = new Vector2((player.GetHealth() / 100f * 473.2f), 18.5f);
-        energyBar.sizeDelta = new Vector2((player.GetEnergy() / 100f * 473.2f), 18.5f);
-        if (player.GetHealth() <= 0)
+        healthBar.sizeDelta = new Vector2((player.GetComponent<Player>().GetHealth() / 100f * 473.2f), 18.5f);
+        energyBar.sizeDelta = new Vector2((player.GetComponent<Player>().GetEnergy() / 100f * 473.2f), 18.5f);
+        if (player.GetComponent<Player>().GetHealth() <= 0)
         {
-            gameOverText.GetComponent<Text>().text = "You F*cked Up Fat Boy";
+            text.GetComponent<Text>().text = "You F*cked Up Fat Boy";
+            player.SetActive(false);
+        }
+        if (player.GetComponent<Player>().GetWin())
+        {
+            text.GetComponent<Text>().text = "You Won... Now What?";
         }
     }
 

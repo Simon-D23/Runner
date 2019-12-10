@@ -24,7 +24,6 @@ public class Opponent : MonoBehaviour
     {
         init();
         speedMultiplier = (startedSide.Equals("right")) ? 1 : -1;
-
     }
 
     public void Update()
