@@ -29,7 +29,7 @@ public class Saw : MonoBehaviour
             {
                 GameObject plank = new GameObject("Plank");
                 plank.transform.position = new Vector3(collision.transform.position.x + 1, collision.transform.position.y - 0.3f, -2);
-                plank.transform.localScale += new Vector3(0.2f, 0.2f, 0);
+                plank.transform.localScale += new Vector3(0.5f, 0.5f, 0);
                 plank.AddComponent<SpriteRenderer>();
                 plank.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("TerrainTileset")[17];
                 plank.AddComponent<BoxCollider2D>().isTrigger = true;

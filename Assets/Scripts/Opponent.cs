@@ -66,7 +66,7 @@ public class Opponent : MonoBehaviour
         }
         if (collision.gameObject.name.Equals("Bullet"))
         {
-            DecreaseHealth(/*collision.GetComponent<Bullet>().GetDamage()*/20);         
+            DecreaseHealth(20);         
             collision.gameObject.SetActive(false);           
         }
     }

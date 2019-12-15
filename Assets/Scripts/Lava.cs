@@ -15,9 +15,11 @@ public class Lava : MonoBehaviour
         {
             if (Input.GetKey("c") && player.GetComponent<Player>().GetInventory().Contain("Iron") > 0)
             {
-                player.GetComponent<Player>().GetInventory().AddMunition(30);
+                player.GetComponent<Player>().GetInventory().AddMunition(33);
                 player.GetComponent<Player>().GetInventory().Remove("Iron", 1);             
             }
+            player.GetComponent<Player>().GetComponent<HUD>().SetInfoText("It's A Little Hot Here");
+            player.GetComponent<Player>().GetComponent<HUD>().SetLittleHotTimer(Time.fixedTime);
         }
     }
 }

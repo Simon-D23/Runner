@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
     private bool isGrounded = false;
     private bool canClimbLadder = false;
     private float canClimbLadderTimer = 0;
-    private float canClimbLadderMaxTime = 0;
+    private float canClimbLadderMaxTime = 25;
 
     private const int ENERGY_TIMER = 1;
     private const int ACTION_TIMER = 1;
@@ -43,18 +43,19 @@ public class Player : MonoBehaviour {
     void Start () {        
         inventory.SetPlayer(this);
         player.GetComponent<Animator>().enabled = false;
-       
     }
 	
 	void Update () {
-
-        Move();
-        Jump();
-        inventory.EquipedItems();
-        inventory.UseEquipItem();
-        FreeCraft();
-        BulletsRep.ToUpdate();        
-        Energy();
+        if (health > 0)
+        {
+            Move();
+            Jump();
+            inventory.EquipedItems();
+            inventory.UseEquipItem();
+            FreeCraft();
+            BulletsRep.ToUpdate();
+            Energy();          
+        }
         Die();
     }
 
@@ -100,6 +101,11 @@ public class Player : MonoBehaviour {
                 rb.velocity -= new Vector2(speed, 0);
             }
         }
+        if (collision.gameObject.CompareTag("Ladder") && !(Time.fixedTime - canClimbLadderTimer <= canClimbLadderMaxTime)) {
+            GetComponent<HUD>().SetTooFatText("You'r too Fat Boyyy");
+            GetComponent<HUD>().SetTooFatTextTimer(Time.fixedTime);
+        }
+
     }
 
     private void TakeItem(Collider2D collision)
@@ -129,15 +135,8 @@ public class Player : MonoBehaviour {
     private void FreeCraft()
     {
         if (Input.GetKey("c") && inventory.Contain("Plank") > 1 && Time.fixedTime - currentActionTimer > ACTION_TIMER)
-        {           
-            GameObject ladder = new GameObject("Ladder");
-            ladder.transform.position = new Vector3(transform.position.x, transform.position.y - 0.3f, -2);
-            ladder.transform.localScale += new Vector3(1.73f, 1.73f, 0);
-            ladder.AddComponent<SpriteRenderer>();
-            ladder.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("TerrainTileset")[24];
-            ladder.AddComponent<BoxCollider2D>().isTrigger = true;
-            ladder.tag = "Ladder";
-            ladder.name = "Ladder";
+        {
+            ItemFactory.Create("Ladder", transform.position.x, transform.position.y - 0.3f);          
             currentActionTimer = Time.fixedTime;
             inventory.Remove("Plank", 2);
         }
@@ -214,20 +213,30 @@ public class Player : MonoBehaviour {
         if (Time.fixedTime - currentEnergyTimer > ENERGY_TIMER)
         {
             DecreaseEnergy(2);
-            speed = MAX_SPEED * ((energy + 50) / 100f);
+            speed = MAX_SPEED * ((energy + 50f) / (float)MAX_ENERGY);
             speed = (speed > MAX_SPEED) ? MAX_SPEED : speed;      
             currentEnergyTimer = Time.fixedTime;
+        }
+        if (energy < 30)
+        {
+            GetComponent<HUD>().SetInfoText("Fat Ass Need Sugar?");
+            GetComponent<HUD>().SetLittleHotTimer(Time.fixedTime);
+        }
+        else if (GetComponent<HUD>().GetInfoText() == "Fat Ass Need Sugar?")
+        {
+            GetComponent<HUD>().SetInfoText("");
         }
     }
 
     public void Die()
     {
         if (health <= 0) {
+            GetComponent<SpriteRenderer>().sprite = null;
             if (currentDeadTimer == 0)
             {
                 currentDeadTimer = Time.fixedTime;
             }
-            if (Time.fixedTime - currentDeadTimer > DEAD_TIMER)
+            if (Time.fixedTime - currentDeadTimer > 3)
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
@@ -237,7 +246,7 @@ public class Player : MonoBehaviour {
     public void IncreaseEnergy(int value)
     {
         energy += value;
-        energy = (energy > 100) ? 100 : energy;
+        energy = (energy > MAX_ENERGY) ? MAX_ENERGY : energy;
     }
 
     public void DecreaseEnergy(int value)
@@ -249,7 +258,7 @@ public class Player : MonoBehaviour {
     public void IncreaseHealth(int value)
     {
         health += value;
-        health = (health > 100) ? 100 : health;
+        health = (health > MAX_HEALTH) ? MAX_HEALTH : health;
     }
 
     public void DecreaseHealth(int damage)
@@ -284,6 +293,11 @@ public class Player : MonoBehaviour {
     public bool GetWin()
     {
         return win;
+    }
+
+    public void SetInfoText(string value)
+    {
+        GetComponent<HUD>().SetInfoText(value);
     }
 
     public GameObject GetGameObject()

@@ -19,6 +19,6 @@ public class Pacman : Opponent
 
     public override void Attack()
     {
-        //SetSpeed(-1);                
+                      
     }
 }

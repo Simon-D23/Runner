@@ -119,17 +119,22 @@ namespace Assets.Scripts
         {
             int index = 0;
             int nbRemoved = 0;
+            List<int> indexes = new List<int>();
             foreach (GameObject item in listGameObjects)
             {
                 if (item.name.Equals(itemName))
                 {
-                    if (nbRemoved <= nbRemove)
-                    {
-                        listGameObjects.RemoveAt(index);
+                    if (nbRemoved < nbRemove)
+                    {                       
+                        indexes.Add(index);
                         nbRemoved++;
                     }                 
                 }
                 index++;
+            }
+            foreach (int i in indexes)
+            {
+                listGameObjects.RemoveAt(i);
             }
         }
 

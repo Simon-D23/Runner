@@ -19,6 +19,17 @@ class ItemFactory
             iron.AddComponent<BoxCollider2D>().isTrigger = true;
             iron.tag = "Item";
         }
+        if (name.Equals("Ladder"))
+        {
+            GameObject ladder = new GameObject("Ladder");
+            ladder.transform.position = new Vector3(x, y, -2);
+            ladder.transform.localScale += new Vector3(1.73f, 1.73f, 0);
+            ladder.AddComponent<SpriteRenderer>();
+            ladder.GetComponent<SpriteRenderer>().sprite = Resources.LoadAll<Sprite>("TerrainTileset")[24];
+            ladder.AddComponent<BoxCollider2D>().isTrigger = true;
+            ladder.tag = "Ladder";
+            ladder.name = "Ladder";
+        }
     }
 }
 
